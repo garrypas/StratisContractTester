@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="NBitcoin">
+      <HintPath>..\lib\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.Bitcoin.Features.SmartContracts">
+      <HintPath>..\lib\Stratis.Bitcoin.Features.SmartContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.SmartContracts">
+      <HintPath>..\lib\Stratis.SmartContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.SmartContracts.CLR">
+      <HintPath>..\lib\Stratis.SmartContracts.CLR.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.SmartContracts.CLR.Validation">
+      <HintPath>..\lib\Stratis.SmartContracts.CLR.Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.SmartContracts.Core">
+      <HintPath>..\lib\Stratis.SmartContracts.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Stratis.SmartContracts.Networks">
+      <HintPath>..\lib\Stratis.SmartContracts.Networks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
