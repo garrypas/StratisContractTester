@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StratisContractTester;
+using System.Linq;
 
 namespace StratisContractTesterTests
 {
@@ -24,12 +25,29 @@ namespace StratisContractTesterTests
         }
 
         [TestMethod]
+        public void ValidatesSmartContract()
+        {
+            var compilationResult = contractTester.Compile(ContractFile);
+            if (!compilationResult.Success)
+            {
+                Assert.Inconclusive("Failed to compile smart contract. Probably a bug earlier in the flow.");
+                return;
+            }
+            Assert.IsFalse(contractTester.Validate(compilationResult).Any());
+        }
+
+        [TestMethod]
         public void PublishesSmartContract()
         {
             var compilationResult = contractTester.Compile(ContractFile);
             if (!compilationResult.Success)
             {
                 Assert.Inconclusive("Failed to compile smart contract. Probably a bug earlier in the flow.");
+                return;
+            }
+            if (contractTester.Validate(compilationResult).Any())
+            {
+                Assert.Inconclusive("Failed to validate smart contract.");
                 return;
             }
             var contractAddress = contractTester.PublishContract(compilationResult);
@@ -43,6 +61,11 @@ namespace StratisContractTesterTests
             if (!compilationResult.Success)
             {
                 Assert.Inconclusive("Failed to compile smart contract. Probably a bug earlier in the flow.");
+                return;
+            }
+            if (contractTester.Validate(compilationResult).Any())
+            {
+                Assert.Inconclusive("Failed to validate smart contract.");
                 return;
             }
             var contractAddress = contractTester.PublishContract(compilationResult);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using NBitcoin;
 using Stratis.Bitcoin.Features.SmartContracts.Networks;
 using Stratis.Patricia;
@@ -20,7 +21,7 @@ namespace StratisContractTester
         private uint160 CoinbaseAddress = 0;
         private Money MempoolFee = new Money(1_000_000);
 
-        private static readonly uint160 SenderAddress = 2;
+        public static readonly uint160 SenderAddress = 2;
 
         private readonly IKeyEncodingStrategy keyEncodingStrategy;
         private readonly ILoggerFactory loggerFactory;
@@ -80,6 +81,12 @@ namespace StratisContractTester
             return ContractCompiler.CompileFile(fileName);
         }
 
+        public IEnumerable<ValidationResult> Validate(ContractCompilationResult compiledContract)
+        {
+            IContractModuleDefinition moduleDefinition = ContractDecompiler.GetModuleDefinition(compiledContract.Compilation).Value;
+            return new SmartContractValidator().Validate(moduleDefinition.ModuleDefinition).Errors;
+        }
+
         public string PublishContract(ContractCompilationResult compiledContract)
         {
             var transactionValue = (Money)100;
@@ -92,7 +99,6 @@ namespace StratisContractTester
             TxOut txOut = transaction.AddOutput(0, new Script(callDataSerializer.Serialize(contractTxData)));
             txOut.Value = transactionValue;
             var transactionContext = new ContractTransactionContext(BlockHeight, CoinbaseAddress, MempoolFee, SenderAddress, transaction);
-
             IContractExecutionResult result = contractExecutor.Execute(transactionContext);
             return result.NewContractAddress?.ToString();
         }
@@ -108,7 +114,6 @@ namespace StratisContractTester
             var transaction = new Transaction();
             var txOut = transaction.AddOutput(0, new Script(callDataSerializer.Serialize(contractTxData)));
             var transactionContext = new ContractTransactionContext(BlockHeight, CoinbaseAddress, MempoolFee, SenderAddress, transaction);
-
             return contractExecutor.Execute(transactionContext);
         }
     }
